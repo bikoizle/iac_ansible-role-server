@@ -9,6 +9,7 @@
 - name: Set selinux policy
   selinux:
     state: "{{ selinux_mode }}"
+    policy: "{{ selinux_policy }}"
 
 - name: Copy configuration files
   template:
@@ -17,7 +18,6 @@
   loop: "{{ templates | dict2items }}"
   loop_control:
     loop_var: template
-
 
 - name: Configure services
   service:

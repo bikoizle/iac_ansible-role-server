@@ -15,6 +15,7 @@ packages:
   - "clamav-server-systemd"
 
 selinux_mode: "permissive"
+selinux_policy: "targeted"
 
 templates:
   zabbix_agentd:
