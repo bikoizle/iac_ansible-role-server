@@ -1,0 +1,29 @@
+---
+# tasks file for iac_ansible-role-server
+
+- name: Install packages
+  dnf:
+    name: "{{ packages }}"
+    state: present
+
+- name: Set selinux policy
+  selinux:
+    state: "{{ selinux_mode }}"
+
+- name: Copy configuration files
+  template:
+    src: "{{ template.value.src }}"
+    dest: "{{ template.value.dest }}"
+  loop: "{{ templates | dict2items }}"
+  loop_control:
+    loop_var: template
+
+
+- name: Configure services
+  service:
+    name: "{{ service.key }}"
+    state: "{{ service.value.state }}"
+    enabled: "{{ service.value.enabled }}"
+  loop: "{{ services | dict2items }}"
+  loop_control:
+    loop_var: service

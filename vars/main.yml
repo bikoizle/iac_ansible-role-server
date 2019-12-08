@@ -1,0 +1,59 @@
+---
+# vars file for iac_ansible-role-server
+
+packages:
+  - "openssh-server"
+  - "zabbix-agent"
+  - "clamav-server"
+  - "clamav-data"
+  - "clamav-update"
+  - "clamav-filesystem"
+  - "clamav"
+  - "clamav-scanner-systemd"
+  - "clamav-devel"
+  - "clamav-lib"
+  - "clamav-server-systemd"
+
+selinux_mode: "permissive"
+
+templates:
+  zabbix_agentd:
+    src: "etc/zabbix/zabbix_agentd.conf.j2"
+    dest: "/etc/zabbix/zabbix_agentd.conf"
+  freshclam:
+    src: "etc/freshclam.conf.j2"
+    dest: "/etc/freshclam.conf"
+  clam-freshclam:
+    src: "etc/systemd/system/clam-freshclam.service.j2"
+    dest: "/etc/systemd/system/clam-freshclam.service"
+  clamd:
+    src: "etc/clamd.d/clamd.conf.j2"
+    dest: "/etc/clamd.d/clamd.conf"
+  scan:
+    src: "etc/clamd.d/scan.conf.j2"
+    dest: "/etc/clamd.d/scan.conf"
+
+zabbix_agentd_server: "zabbix.lan"
+zabbix_agentd_serveractive: "zabbix.lan"
+zabbix_agentd_hostnameitem: "system.hostname"
+zabbix_agentd_hostmetadata: "openstack"
+
+freshclam_logrotate: "yes"
+
+clamd_logrotate: "yes"
+
+scan_logrotate: "yes"
+
+services:
+  firewalld:
+    state: "stopped"
+    enabled: "no"
+  zabbix-agent:
+    state: "restarted"
+    enabled: "yes"
+  clamd@scan:
+    state: "restarted"
+    enabled: "yes"
+  clam-freshclam:
+    state: "restarted"
+    enabled: "yes"
